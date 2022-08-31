@@ -1,0 +1,13 @@
+DELETE  http://localhost:3003/api/beers/6
+Content-Type: application/json
+
+{
+	"beername": "Zombie Dust",
+	"brewery": "Three Floyds",
+	"description": "A single hopped IPA.",
+	"origin": "Munster, IN",
+	"style": "IPA",
+	"color": "Amber",
+	"IBU": "60",
+	"ABV": "8"
+}
