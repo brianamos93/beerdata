@@ -1,5 +1,5 @@
 const menusRouter = require('express').Router()
-const menu = require('../modles/menu')
+const Menu = require('../modles/menu')
 
 menusRouter.get('/', (req, res) => {
 	Menu
