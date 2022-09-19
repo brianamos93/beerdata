@@ -8,7 +8,13 @@ const beerSchema = new mongoose.Schema({
 	style: String,
 	color: String,
 	IBU: Number,
-	ABV: Number
+	ABV: Number,
+	rating: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Rating'
+		}
+	],
 })
 
 const Beer = mongoose.model('Beer', beerSchema)

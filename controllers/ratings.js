@@ -1,5 +1,6 @@
 const ratingsRouter = require('express').Router()
 const Rating = require('../models/rating')
+const User = require('../models/user')
 
 ratingsRouter.get('/', (req, res) => {
 	Rating
@@ -19,15 +20,23 @@ ratingsRouter.get('/:id', async (req, res) => {
 	}
 })
 
-ratingsRouter.post('/', (req, res) => {
-	const rating = new Rating(req.body)
+ratingsRouter.post('/', async (req, res) => {
+	const body = req.body
+	const user = await User.findById(body.userId)
 
-	rating
-		.save()
-		.then(result => {
-			res.status(201).json(result)
-		})
+	const rating = new Rating({
+		beer: body.beer,
+		rating: body.rating,
+		datecreated: new Date(),
+		user: user._id
+	})
+	const savedRating = await rating.save()
+	user.ratings = user.ratings.concat(savedRating._id)
+	await user.save()
+
+  res.status(201).json(savedRating)
 })
+
 
 ratingsRouter.delete('/:id', async (req, res) => {
 	await Rating.findByIdAndRemove(req.params.id)
