@@ -1,5 +1,7 @@
 const beersRouter = require('express').Router()
 const Beer = require('../models/beer')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 beersRouter.get('/', (req, res) => {
 	Beer
@@ -19,14 +21,41 @@ beersRouter.get('/:id', async (req, res) => {
 	}
 })
 
-beersRouter.post('/', (req, res) => {
-	const beer = new Beer(req.body)
+const getTokenFrom = request => {
+	const authorization = request.get('authorization')
+	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+		return authorization.substring(7)
+	}
+	return null
+}
 
-	beer
-		.save()
-		.then(result => {
-			res.status(201).json(result)
-		})
+beersRouter.post('/', async (req, res) => {
+	const { beername, brewery, description, origin, style, color, IBU, ABV, rating } = req.body
+	const token = getTokenFrom(req)
+	const decodedToken = jwt.verify(token, process.env.SECRET)
+	if (!token || !decodedToken.id) {
+		return res.status(401).json({ error: 'token missing or invalid' })
+	}
+	const user = await User.findById(decodedToken.id)
+
+	const beer = new Beer({
+		beername,
+		brewery,
+		description,
+		origin,
+		style,
+		color,
+		IBU,
+		ABV,
+		rating: [],
+		user: user._id
+	})
+
+	const savedBeer = await beer.save()
+	user.beers = user.beers.concat(savedBeer._id)
+	await beer.save()
+
+	res.status(201).json(savedBeer)
 })
 
 beersRouter.delete('/:id', async (req, res) => {

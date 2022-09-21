@@ -1,6 +1,7 @@
 const ratingsRouter = require('express').Router()
 const Rating = require('../models/rating')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 ratingsRouter.get('/', (req, res) => {
 	Rating
@@ -20,9 +21,22 @@ ratingsRouter.get('/:id', async (req, res) => {
 	}
 })
 
+const getTokenFrom = request => {
+	const authorization = request.get('authorization')
+	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+		return authorization.substring(7)
+	}
+	return null
+}
+
 ratingsRouter.post('/', async (req, res) => {
 	const body = req.body
-	const user = await User.findById(body.userId)
+	const token = getTokenFrom(req)
+	const decodedToken = jwt.verify(token, process.env.SECRET)
+	if (!decodedToken.id) {
+		return res.status(401).json({ error: 'token missing or invalid' })
+	}
+	const user = await User.findById(decodedToken.id)
 
 	const rating = new Rating({
 		beer: body.beer,
@@ -34,7 +48,7 @@ ratingsRouter.post('/', async (req, res) => {
 	user.ratings = user.ratings.concat(savedRating._id)
 	await user.save()
 
-  res.status(201).json(savedRating)
+	res.status(201).json(savedRating)
 })
 
 

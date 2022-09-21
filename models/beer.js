@@ -15,6 +15,18 @@ const beerSchema = new mongoose.Schema({
 			ref: 'Rating'
 		}
 	],
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
+	}
+})
+
+beerSchema.set('toJSON', {
+	transform: (document, returnedObject) => {
+		returnedObject.id = returnedObject._id.toString()
+		delete returnedObject._id
+		delete returnedObject.__v
+	}
 })
 
 const Beer = mongoose.model('Beer', beerSchema)
