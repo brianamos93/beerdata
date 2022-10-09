@@ -1,5 +1,6 @@
-DELETE  http://localhost:3003/api/beers/6
+POST  http://localhost:3003/api/beers/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI2MzI4NmJmN2VlMTY2MTEyMTg3YjJkN2MiLCJpYXQiOjE2NjQ3MjI4MTAsImV4cCI6MTY2NDcyNjQxMH0.h5DR1JIblYZHIhgBi3OXGWyA8yp7A6SNBS5Kd0WCs7M
 
 {
 	"beername": "Zombie Dust",

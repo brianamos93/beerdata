@@ -30,7 +30,7 @@ const getTokenFrom = request => {
 }
 
 beersRouter.post('/', async (req, res) => {
-	const { beername, brewery, description, origin, style, color, IBU, ABV, rating } = req.body
+	const { beername, brewery, description, origin, style, color, IBU, ABV } = req.body
 	const token = getTokenFrom(req)
 	const decodedToken = jwt.verify(token, process.env.SECRET)
 	if (!token || !decodedToken.id) {
