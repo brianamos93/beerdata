@@ -9,6 +9,7 @@ const beerSchema = new mongoose.Schema({
 	color: String,
 	IBU: Number,
 	ABV: Number,
+	currentlyProduced: Boolean,
 	rating: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
@@ -19,7 +20,7 @@ const beerSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	}
-})
+}, { timestamps: true })
 
 beerSchema.set('toJSON', {
 	transform: (document, returnedObject) => {

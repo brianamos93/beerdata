@@ -1,6 +1,7 @@
 const beersRouter = require('express').Router()
 const Beer = require('../models/beer')
 const User = require('../models/user')
+const Rating = require('../models/rating')
 const jwt = require('jsonwebtoken')
 
 beersRouter.get('/', (req, res) => {
@@ -30,7 +31,7 @@ const getTokenFrom = request => {
 }
 
 beersRouter.post('/', async (req, res) => {
-	const { beername, brewery, description, origin, style, color, IBU, ABV, rating } = req.body
+	const body = req.body
 	const token = getTokenFrom(req)
 	const decodedToken = jwt.verify(token, process.env.SECRET)
 	if (!token || !decodedToken.id) {
@@ -38,16 +39,19 @@ beersRouter.post('/', async (req, res) => {
 	}
 	const user = await User.findById(decodedToken.id)
 
+	const rating = await Rating.findById(decodedToken.id)
+
 	const beer = new Beer({
-		beername,
-		brewery,
-		description,
-		origin,
-		style,
-		color,
-		IBU,
-		ABV,
-		rating: [],
+		beername: body.beername,
+		brewery: body.brewery,
+		description: body.description,
+		origin: body.origin,
+		style: body.style,
+		color: body.color,
+		IBU: body.IBU,
+		ABV: body.ABV,
+		currentlyProduced: body.currentlyProduced,
+		rating: rating._id,
 		user: user._id
 	})
 

@@ -41,7 +41,6 @@ ratingsRouter.post('/', async (req, res) => {
 	const rating = new Rating({
 		beer: body.beer,
 		rating: body.rating,
-		datecreated: new Date(),
 		user: user._id
 	})
 	const savedRating = await rating.save()

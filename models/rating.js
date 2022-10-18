@@ -9,15 +9,13 @@ const ratingSchema = new mongoose.Schema({
 		type: Number,
 		required: true
 	},
-	datecreated: {
-		type: Date,
-		default: new Date()
-	},
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	}
 
+}, {
+	timestamps: true
 })
 
 const Rating = mongoose.model('Rating', ratingSchema)
